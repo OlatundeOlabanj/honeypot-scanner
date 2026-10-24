@@ -1,0 +1,205 @@
+/* ============================================================
+   base.css — Design tokens, reset, core layout
+   ============================================================ */
+:root {
+  /* Backgrounds */
+  --bg:          #0b0f1a;
+  --bg-card:     #111827;
+  --bg-card2:    #161e2e;
+  --bg-input:    #0d1220;
+  --bg-elevated: #1a2235;
+
+  /* Borders */
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.04);
+  --border-act:  rgba(0,200,210,0.35);
+
+  /* Text */
+  --text:        #e2e8f0;
+  --text2:       #8fa3b1;
+  --text3:       #4a6070;
+
+  /* Teal accent */
+  --teal:        #00c4cc;
+  --teal2:       #0097a7;
+  --teal3:       #006070;
+  --teal-glow:   rgba(0,196,204,0.18);
+
+  /* Status colors */
+  --green:       #22c55e;
+  --amber:       #f59e0b;
+  --orange:      #f97316;
+  --red:         #ef4444;
+  --red2:        #b91c1c;
+  --blue:        #3b82f6;
+
+  /* Glow */
+  --glow-teal:   0 0 20px rgba(0,196,204,0.25), 0 0 40px rgba(0,196,204,0.1);
+  --glow-red:    0 0 16px rgba(239,68,68,0.3);
+  --glow-green:  0 0 16px rgba(34,197,94,0.3);
+
+  /* Typography */
+  --font:        'Outfit', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+
+  /* Layout */
+  --max-w:       880px;
+  --card-r:      16px;
+  --input-r:     10px;
+  --header-h:    60px;
+  --nav-h:       64px;
+
+  /* Transitions */
+  --ease:        cubic-bezier(0.4,0,0.2,1);
+  --t:           0.18s;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ── Ambient glows ─────────────────────────────────────── */
+.bg-glow {
+  position: fixed; border-radius: 50%;
+  pointer-events: none; z-index: 0;
+  filter: blur(80px);
+}
+.bg-glow-1 {
+  width: 600px; height: 400px;
+  top: -100px; left: 50%; transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(0,150,160,0.12) 0%, transparent 70%);
+}
+.bg-glow-2 {
+  width: 400px; height: 300px;
+  bottom: 100px; right: -80px;
+  background: radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%);
+}
+#particles-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.25;
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.app-main {
+  position: relative; z-index: 1;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 16px) 16px calc(var(--nav-h) + 20px);
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.app-section { display: none; }
+.app-section.active { display: block; animation: fade-in 0.25s var(--ease); }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section card wrapper ───────────────────────────────── */
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  overflow: hidden;
+}
+
+.section-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.section-card-title {
+  font-size: 1rem; font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+/* ── Block label ─────────────────────────────────────────── */
+.block-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--text3);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* ── Badge ───────────────────────────────────────────────── */
+.badge {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text2);
+}
+
+/* ── Input label ─────────────────────────────────────────── */
+.input-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  color: var(--text3);
+  margin-bottom: 7px;
+}
+
+.input-group { margin-bottom: 18px; }
+
+/* ── Dropdown ────────────────────────────────────────────── */
+.dropdown-wrap { position: relative; }
+.chain-dropdown {
+  width: 100%; height: 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--input-r);
+  padding: 0 36px 0 14px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-family: var(--font);
+  appearance: none; outline: none; cursor: pointer;
+  transition: border-color var(--t);
+}
+.chain-dropdown:focus { border-color: var(--teal3); }
+.chain-dropdown option { background: var(--bg-card2); }
+.dropdown-caret {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3); pointer-events: none; font-size: 0.8rem;
+}
+
+/* ── Empty states ────────────────────────────────────────── */
+.flags-empty, .sim-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 180px; gap: 12px;
+  color: var(--text3);
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+}
+.empty-icon { font-size: 2rem; opacity: 0.2; }
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .app-main { padding-left: 12px; padding-right: 12px; }
+}

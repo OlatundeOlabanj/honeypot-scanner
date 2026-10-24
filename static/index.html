@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MemeScanner | Honeypot Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css"/>
+  <link rel="stylesheet" href="/css/header.css"/>
+  <link rel="stylesheet" href="/css/scanner.css"/>
+  <link rel="stylesheet" href="/css/status.css"/>
+  <link rel="stylesheet" href="/css/flags.css"/>
+  <link rel="stylesheet" href="/css/simulation.css"/>
+  <link rel="stylesheet" href="/css/education.css"/>
+  <link rel="stylesheet" href="/css/feedback.css"/>
+  <link rel="stylesheet" href="/css/bottomnav.css"/>
+</head>
+<body>
+
+  <!-- Ambient glow layers -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ══════════════════════════════════════
+       TOP HEADER
+  ══════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-logo">
+      <span class="logo-icon">◎</span>
+      <span class="logo-text">MemeScan<span class="logo-accent">ner</span></span>
+      <span class="logo-sep">|</span>
+      <span class="logo-sub">Honeypot Check</span>
+    </div>
+    <div class="header-status" id="headerStatus">
+      <span class="status-dot"></span>
+      <span class="status-label" id="statusLabel">Ready</span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════
+       MAIN APP
+  ══════════════════════════════════════ -->
+  <main class="app-main">
+
+    <!-- ── SCANNER SECTION ────────────────────────── -->
+    <section class="app-section active" id="scanner" data-nav="home">
+
+      <div class="main-card">
+
+        <!-- Address input -->
+        <div class="input-group">
+          <label class="input-label">CONTRACT ADDRESS</label>
+          <div class="address-wrap">
+            <span class="addr-0x" id="addrPrefix">0x</span>
+            <input
+              id="addressInput"
+              type="text"
+              class="address-input"
+              placeholder="Paste token contract address..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="addr-btn" id="pasteBtn" title="Paste">⎘</button>
+            <button class="addr-btn" id="clearBtn" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <!-- Chain row -->
+        <div class="chain-row">
+          <div class="chain-dropdown-wrap">
+            <label class="input-label">BLOCKCHAIN</label>
+            <div class="dropdown-wrap">
+              <select id="chainSelect" class="chain-dropdown">
+                <option value="ethereum">Ethereum</option>
+                <option value="bsc">BNB Chain</option>
+                <option value="base">Base</option>
+                <option value="polygon">Polygon</option>
+                <option value="arbitrum">Arbitrum</option>
+                <option value="solana">Solana</option>
+              </select>
+              <span class="dropdown-caret">▾</span>
+            </div>
+          </div>
+
+          <div class="chain-pills-wrap">
+            <label class="input-label">QUICK CHAINS</label>
+            <div class="chain-pills" id="chainPills">
+              <button class="chain-pill eth active" data-chain="ethereum">
+                <span class="pill-icon">Ξ</span> ETH
+              </button>
+              <button class="chain-pill bsc" data-chain="bsc">
+                <span class="pill-icon">◈</span> BSC
+              </button>
+              <button class="chain-pill base" data-chain="base">
+                <span class="pill-icon">⬡</span> BASE
+              </button>
+              <button class="chain-pill sol" data-chain="solana">
+                <span class="pill-icon">◎</span> SOL
+              </button>
+              <button class="chain-pill arb" data-chain="arbitrum">
+                <span class="pill-icon">⬡</span> ARB
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scan button -->
+        <button class="scan-btn" id="scanBtn">
+          <span id="scanBtnLabel">INITIATE SCAN</span>
+          <span class="scan-progress" id="scanProgress"></span>
+        </button>
+
+        <!-- Error -->
+        <div class="scan-error" id="scanError" style="display:none" role="alert"></div>
+      </div><!-- /main-card -->
+
+      <!-- ── SCAN STATUS + TOKEN DETAILS (shown after scan) -->
+      <div class="results-area" id="resultsArea" style="display:none">
+
+        <!-- Left: 4 status cards -->
+        <div class="status-block">
+          <div class="block-label">SCAN STATUS</div>
+          <div class="status-cards" id="statusCards">
+
+            <!-- Risk Level -->
+            <div class="status-card">
+              <div class="sc-label">Risk Level</div>
+              <div class="sc-value risk-value" id="bannerLabel">--</div>
+              <!-- hidden elements results.js needs -->
+              <div style="display:none">
+                <div id="riskBanner"></div>
+                <div id="bannerIcon"></div>
+                <div id="bannerReason"></div>
+              </div>
+            </div>
+
+            <!-- Honeypot -->
+            <div class="status-card">
+              <div class="sc-label">Honeypot?</div>
+              <div class="sc-value" id="scHoneypot">--</div>
+            </div>
+
+            <!-- Tax -->
+            <div class="status-card">
+              <div class="sc-label">Tax Status</div>
+              <div class="sc-value" id="scTaxStatus">--</div>
+              <div class="sc-sub" id="scTaxSub"></div>
+            </div>
+
+            <!-- Source -->
+            <div class="status-card">
+              <div class="sc-label">Contract Source</div>
+              <div class="sc-value" id="scSource">--</div>
+            </div>
+          </div>
+
+          <!-- Score ring (compact) -->
+          <div class="score-compact">
+            <svg class="score-svg" viewBox="0 0 100 100">
+              <circle class="score-track" cx="50" cy="50" r="40"/>
+              <circle class="score-fill" id="scoreFill" cx="50" cy="50" r="40"/>
+            </svg>
+            <div class="score-inner">
+              <div class="score-number" id="scoreNumber">0</div>
+              <div class="score-label">RISK</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: token details panel -->
+        <div class="token-panel">
+          <div class="block-label">Token Details</div>
+          <div class="token-header">
+            <div class="token-avatar" id="tokenAvatar">?</div>
+            <div>
+              <div class="token-name" id="tcName">Unknown</div>
+              <div class="token-symbol" id="tcSymbol">---</div>
+            </div>
+          </div>
+          <div class="token-stats">
+            <div class="tstat">
+              <span class="tstat-label">Liquidity</span>
+              <span class="tstat-val" id="tcLiquidity">$---</span>
+            </div>
+            <div class="tstat">
+              <span class="tstat-label">Holders</span>
+              <span class="tstat-val" id="tcHolders">---</span>
+            </div>
+            <div class="tstat">
+              <span class="tstat-label">Buy Tax</span>
+              <span class="tstat-val" id="tcBuyTax">--%</span>
+            </div>
+            <div class="tstat">
+              <span class="tstat-label">Sell Tax</span>
+              <span class="tstat-val" id="tcSellTax">--%</span>
+            </div>
+            <div class="tstat">
+              <span class="tstat-label">Mintable</span>
+              <span class="tstat-val" id="tcMintable">---</span>
+            </div>
+            <div class="tstat">
+              <span class="tstat-label">Proxy</span>
+              <span class="tstat-val" id="tcProxy">---</span>
+            </div>
+          </div>
+          <!-- hidden: open source (used by results.js) -->
+          <div style="display:none"><span id="tcOpenSource"></span></div>
+          <div class="token-links" id="extLinks"></div>
+        </div>
+
+        <!-- Hidden score ring compat elements -->
+        <div style="display:none">
+          <div id="resultsEmpty"></div>
+          <div id="resultsContent"></div>
+          <div id="tokenCards"></div>
+        </div>
+      </div><!-- /results-area -->
+
+      <!-- ── RECENT SCANS ──────────────────────────── -->
+      <div class="recent-scans-block">
+        <div class="block-label">RECENT SCANS</div>
+        <div class="recent-table">
+          <div class="rt-head">
+            <span>Scan Date</span>
+            <span>Chain</span>
+            <span>Address</span>
+            <span>Token</span>
+            <span>Risk Level</span>
+          </div>
+          <div id="historyList">
+            <div class="rt-empty">No scans yet this session.</div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /scanner -->
+
+    <!-- ── FLAGS SECTION ─────────────────────────── -->
+    <section class="app-section" id="flags" data-nav="flags">
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="section-card-title">Risk Flags</span>
+          <span class="badge" id="flagsBadge">0</span>
+        </div>
+        <div class="flags-empty" id="flagsEmpty">
+          <div class="empty-icon">⚑</div>
+          <p>Flags appear after scanning a token.</p>
+        </div>
+        <div id="flagsContent" style="display:none">
+          <div class="flags-summary" id="flagsSummary"></div>
+          <div class="flags-list" id="flagsList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SIMULATION SECTION ────────────────────── -->
+    <section class="app-section" id="simulation" data-nav="simulation">
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="section-card-title">TX Simulation</span>
+        </div>
+        <div class="sim-empty" id="simEmpty">
+          <div class="empty-icon">▶</div>
+          <p>Simulation data loads after scanning.</p>
+        </div>
+        <div id="simContent" style="display:none">
+          <div class="sim-grid">
+            <div class="sim-card">
+              <div class="sim-card-header">
+                <span class="sim-action">BUY</span>
+                <span class="sim-result" id="simBuyResult">---</span>
+              </div>
+              <div class="sim-card-body">
+                <div class="sim-stat">
+                  <span class="sim-stat-label">Tax</span>
+                  <span class="sim-stat-val" id="simBuyTax">--%</span>
+                </div>
+                <div class="sim-stat">
+                  <span class="sim-stat-label">Gas</span>
+                  <span class="sim-stat-val" id="simBuyGas">---</span>
+                </div>
+              </div>
+            </div>
+            <div class="sim-card">
+              <div class="sim-card-header">
+                <span class="sim-action">SELL</span>
+                <span class="sim-result" id="simSellResult">---</span>
+              </div>
+              <div class="sim-card-body">
+                <div class="sim-stat">
+                  <span class="sim-stat-label">Tax</span>
+                  <span class="sim-stat-val" id="simSellTax">--%</span>
+                </div>
+                <div class="sim-stat">
+                  <span class="sim-stat-label">Gas</span>
+                  <span class="sim-stat-val" id="simSellGas">---</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sim-extra" id="simExtra"></div>
+          <div class="verdict-box">
+            <div class="verdict-eyebrow">VERDICT</div>
+            <p class="verdict-text" id="verdictText"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS ──────────────────────────── -->
+    <section class="app-section" id="education" data-nav="education">
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="section-card-title">How It Works</span>
+        </div>
+        <div class="edu-grid">
+          <div class="edu-card">
+            <div class="edu-icon">💀</div>
+            <h3 class="edu-heading">What Is a Honeypot?</h3>
+            <p class="edu-body">A contract that lets you buy but blocks selling. Scammers wait for victims, then drain liquidity — funds trapped forever.</p>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">🔍</div>
+            <h3 class="edu-heading">How We Detect It</h3>
+            <p class="edu-body">We simulate real buy and sell transactions. If selling fails or incurs 90%+ tax, the token is flagged. We also check for blacklists, mintable supply, and proxy upgrades.</p>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">⚠️</div>
+            <h3 class="edu-heading">Common Patterns</h3>
+            <ul class="edu-list">
+              <li>Owner-only sell (blacklist)</li>
+              <li>90–100% hidden sell tax</li>
+              <li>Sweeper bots on deposits</li>
+              <li>Upgradeable proxy contracts</li>
+              <li>Freeze authority (Solana)</li>
+            </ul>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">🛡</div>
+            <h3 class="edu-heading">Stay Protected</h3>
+            <ul class="edu-list">
+              <li>Always scan before buying</li>
+              <li>Avoid tokens under 48h old</li>
+              <li>Never trust Telegram/TikTok hype</li>
+              <li>Only risk what you can lose</li>
+            </ul>
+          </div>
+          <div class="edu-card wide">
+            <div class="edu-icon">📊</div>
+            <h3 class="edu-heading">Risk Score Guide</h3>
+            <div class="score-legend">
+              <div class="sl-row critical"><span class="sl-range">80–100</span><span>HONEYPOT — Do not buy</span></div>
+              <div class="sl-row high"><span class="sl-range">60–79</span><span>HIGH RISK — Extremely dangerous</span></div>
+              <div class="sl-row medium"><span class="sl-range">40–59</span><span>MEDIUM RISK — Proceed with extreme caution</span></div>
+              <div class="sl-row low"><span class="sl-range">15–39</span><span>LOW RISK — Minor flags, still verify</span></div>
+              <div class="sl-row safe"><span class="sl-range">0–14</span><span>APPEARS SAFE — No honeypot detected</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FEEDBACK ──────────────────────────────── -->
+    <section class="app-section" id="feedback" data-nav="feedback">
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="section-card-title">Feedback</span>
+        </div>
+        <div class="feedback-inner">
+          <p class="feedback-intro">Was this scan accurate? Help us improve detection.</p>
+          <div class="input-group">
+            <label class="input-label">ACCURACY RATING</label>
+            <div class="star-rating" id="starRating">
+              <button class="star" data-val="1">★</button>
+              <button class="star" data-val="2">★</button>
+              <button class="star" data-val="3">★</button>
+              <button class="star" data-val="4">★</button>
+              <button class="star" data-val="5">★</button>
+            </div>
+            <div class="star-labels"><span>Inaccurate</span><span>Accurate</span></div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="feedbackType">FEEDBACK TYPE</label>
+            <div class="dropdown-wrap">
+              <select id="feedbackType" class="chain-dropdown">
+                <option value="">Select type...</option>
+                <option value="false_positive">False positive (safe token flagged)</option>
+                <option value="false_negative">False negative (honeypot missed)</option>
+                <option value="wrong_tax">Tax data inaccurate</option>
+                <option value="general">General feedback</option>
+              </select>
+              <span class="dropdown-caret">▾</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="feedbackComment">COMMENT <span class="optional">(optional)</span></label>
+            <textarea id="feedbackComment" class="fb-textarea" placeholder="Describe the issue..." rows="3" maxlength="500"></textarea>
+            <div class="char-count"><span id="charCount">0</span>/500</div>
+          </div>
+          <button class="submit-btn" id="submitFeedbackBtn">SUBMIT FEEDBACK</button>
+          <div class="feedback-success" id="feedbackSuccess" style="display:none">
+            <span>✓</span> Feedback submitted — thank you!
+          </div>
+          <div class="feedback-error" id="feedbackError" style="display:none"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       BOTTOM NAVIGATION
+  ══════════════════════════════════════ -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bn-item active" data-target="scanner">
+      <span class="bn-icon">⌂</span>
+      <span class="bn-label">Home</span>
+    </button>
+    <button class="bn-item" data-target="flags">
+      <span class="bn-icon">⚑</span>
+      <span class="bn-label">Flags</span>
+    </button>
+    <button class="bn-item" data-target="simulation">
+      <span class="bn-icon">▶</span>
+      <span class="bn-label">Simulation</span>
+    </button>
+    <button class="bn-item" data-target="education">
+      <span class="bn-icon">◈</span>
+      <span class="bn-label">Guide</span>
+    </button>
+    <button class="bn-item" data-target="feedback">
+      <span class="bn-icon">◉</span>
+      <span class="bn-label">Feedback</span>
+    </button>
+  </nav>
+
+  <script src="/js/particles.js"></script>
+  <script src="/js/scanner.js"></script>
+  <script src="/js/results.js"></script>
+  <script src="/js/feedback.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

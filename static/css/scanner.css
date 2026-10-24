@@ -1,0 +1,218 @@
+/* ============================================================
+   scanner.css — Main scanner card, chain pills, scan button
+   ============================================================ */
+
+/* ── Main card ──────────────────────────────────────────── */
+.main-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* ── Address input ──────────────────────────────────────── */
+.address-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--input-r);
+  transition: border-color var(--t), box-shadow var(--t);
+  overflow: hidden;
+}
+.address-wrap:focus-within {
+  border-color: var(--teal3);
+  box-shadow: 0 0 0 3px rgba(0,196,204,0.08);
+}
+
+.addr-0x {
+  flex-shrink: 0;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--teal);
+  border-right: 1px solid var(--border2);
+  height: 46px; line-height: 46px;
+  user-select: none;
+  min-width: 36px; text-align: center;
+  transition: color var(--t);
+}
+
+.address-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  padding: 0 12px; height: 46px;
+  font-family: var(--font-mono); font-size: 0.82rem;
+  color: var(--text); letter-spacing: 0.01em;
+}
+.address-input::placeholder { color: var(--text3); }
+
+.addr-btn {
+  background: transparent; border: none;
+  border-left: 1px solid var(--border2);
+  padding: 0 12px; height: 46px;
+  color: var(--text3); font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--t), background var(--t);
+}
+.addr-btn:hover { color: var(--teal); background: rgba(0,196,204,0.05); }
+
+/* ── Chain row ──────────────────────────────────────────── */
+.chain-row {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.chain-dropdown-wrap { flex: 0 0 180px; }
+.chain-pills-wrap    { flex: 1; min-width: 200px; }
+
+/* ── Chain pills ────────────────────────────────────────── */
+.chain-pills {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  align-items: center; padding-top: 2px;
+}
+
+.chain-pill {
+  display: flex; align-items: center; gap: 5px;
+  height: 34px; padding: 0 12px;
+  border-radius: 8px;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  transition: all var(--t);
+  cursor: pointer;
+  background: var(--bg-input);
+  color: var(--text2);
+  border-color: var(--border);
+}
+.chain-pill:hover { color: var(--text); border-color: var(--border-act); }
+
+.pill-icon { font-size: 0.85rem; line-height: 1; }
+
+/* Chain-specific active colors */
+.chain-pill.eth.active  { background: rgba(98,126,234,0.15); border-color: rgba(98,126,234,0.5);  color: #a0aec0; }
+.chain-pill.bsc.active  { background: rgba(240,185,11,0.12); border-color: rgba(240,185,11,0.45); color: #f0b90b; }
+.chain-pill.base.active { background: rgba(0,82,255,0.12);   border-color: rgba(0,82,255,0.45);   color: #6ea8fe; }
+.chain-pill.sol.active  { background: rgba(153,69,255,0.12); border-color: rgba(153,69,255,0.45); color: #c084fc; }
+.chain-pill.arb.active  { background: rgba(40,160,240,0.12); border-color: rgba(40,160,240,0.45); color: #60a5fa; }
+
+/* ── Scan button ────────────────────────────────────────── */
+.scan-btn {
+  width: 100%; height: 52px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #007a85 0%, #00c4cc 50%, #007a85 100%);
+  background-size: 200% 100%;
+  border: none; border-radius: var(--input-r);
+  font-family: var(--font);
+  font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #fff;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: background-position 0.4s var(--ease), box-shadow 0.2s, transform 0.1s;
+  background-position: 0% 0%;
+}
+.scan-btn:hover:not(:disabled) {
+  background-position: 100% 0%;
+  box-shadow: var(--glow-teal), 0 4px 20px rgba(0,0,0,0.4);
+}
+.scan-btn:active:not(:disabled) { transform: scale(0.99); }
+.scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Progress bar inside button */
+.scan-progress {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; width: 0%;
+  background: rgba(255,255,255,0.6);
+  transition: width 0.1s linear;
+}
+
+/* ── Error bar ──────────────────────────────────────────── */
+.scan-error {
+  margin-top: 12px; padding: 11px 14px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem; line-height: 1.55;
+  color: #fca5a5;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.scan-error::before { content: '⚠'; color: var(--red); flex-shrink: 0; }
+
+/* ── Recent scans ───────────────────────────────────────── */
+.recent-scans-block { margin-top: 20px; }
+
+.recent-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  overflow: hidden;
+}
+
+.rt-head {
+  display: grid;
+  grid-template-columns: 160px 80px 1fr 120px 110px;
+  padding: 10px 16px;
+  background: var(--bg-card2);
+  border-bottom: 1px solid var(--border2);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.rt-empty {
+  padding: 28px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+
+.rt-row {
+  display: grid;
+  grid-template-columns: 160px 80px 1fr 120px 110px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border2);
+  font-size: 0.78rem;
+  color: var(--text2);
+  cursor: pointer;
+  transition: background var(--t);
+  align-items: center;
+}
+.rt-row:last-child { border-bottom: none; }
+.rt-row:hover { background: var(--bg-card2); }
+
+.rt-addr {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.rt-chain {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 0.7rem;
+}
+
+.rt-badge {
+  display: inline-block;
+  padding: 2px 10px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 0.62rem;
+  font-weight: 600; letter-spacing: 0.05em;
+}
+.rt-badge.critical { background: rgba(239,68,68,0.15);   color: var(--red); }
+.rt-badge.high     { background: rgba(249,115,22,0.15);  color: var(--orange); }
+.rt-badge.medium   { background: rgba(245,158,11,0.15);  color: var(--amber); }
+.rt-badge.low      { background: rgba(59,130,246,0.12);  color: var(--blue); }
+.rt-badge.safe     { background: rgba(34,197,94,0.12);   color: var(--green); }
+
+@media (max-width: 680px) {
+  .rt-head, .rt-row {
+    grid-template-columns: 1fr 70px 90px;
+  }
+  .rt-head span:nth-child(1),
+  .rt-row  > *:nth-child(1) { display: none; }
+  .rt-head span:nth-child(4),
+  .rt-row  > *:nth-child(4) { display: none; }
+}

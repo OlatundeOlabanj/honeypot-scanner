@@ -1,0 +1,232 @@
+/* ============================================================
+   status.css — Results area: 4 status cards + token panel
+   ============================================================ */
+
+.results-area {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 16px;
+  animation: fade-in 0.3s var(--ease);
+}
+
+/* ── Status block (left) ────────────────────────────────── */
+.status-block {
+  flex: 1; min-width: 280px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 18px;
+  position: relative;
+}
+
+.status-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.status-card {
+  background: var(--bg-card2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px;
+  transition: border-color var(--t);
+}
+.status-card:hover { border-color: var(--border); }
+
+.sc-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.sc-value {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.sc-sub {
+  font-size: 0.7rem;
+  color: var(--text2);
+  margin-top: 3px;
+}
+
+/* Risk level value color */
+.risk-value.critical { color: var(--red); }
+.risk-value.high     { color: var(--orange); }
+.risk-value.medium   { color: var(--amber); }
+.risk-value.low      { color: var(--blue); }
+.risk-value.safe     { color: var(--green); }
+
+/* Honeypot Yes/No */
+.hp-yes { color: var(--red);   }
+.hp-no  { color: var(--green); }
+
+/* ── Compact score ring ─────────────────────────────────── */
+.score-compact {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+}
+
+.score-svg {
+  width: 56px; height: 56px;
+  transform: rotate(-90deg); flex-shrink: 0;
+}
+.score-track {
+  fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 8;
+}
+.score-fill {
+  fill: none; stroke-width: 8; stroke-linecap: round;
+  stroke-dasharray: 251;
+  stroke-dashoffset: 251;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.3s;
+}
+
+.score-inner { flex: 1; }
+.score-number {
+  font-family: var(--font);
+  font-size: 1.6rem; font-weight: 800;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.score-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem; letter-spacing: 0.14em;
+  color: var(--text3); margin-top: 2px;
+}
+
+/* ── Token panel (right) ────────────────────────────────── */
+.token-panel {
+  width: 240px; flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 18px;
+}
+
+.token-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.token-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal3), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem; color: #fff;
+  flex-shrink: 0;
+}
+
+.token-name {
+  font-weight: 600; font-size: 0.9rem;
+  color: var(--text); line-height: 1.2;
+}
+.token-symbol {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; color: var(--teal);
+  margin-top: 2px;
+}
+
+.token-stats {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 14px;
+}
+
+.tstat {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.tstat-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; color: var(--text3);
+  letter-spacing: 0.06em;
+}
+.tstat-val {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; color: var(--text);
+  font-weight: 500;
+}
+
+.token-links {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border2);
+}
+
+.ext-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 10px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  font-size: 0.65rem;
+  color: var(--text2);
+  text-decoration: none;
+  transition: all var(--t);
+  white-space: nowrap;
+}
+.ext-link:hover {
+  border-color: var(--teal3);
+  color: var(--teal);
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .results-area { flex-direction: column; }
+  .token-panel  { width: 100%; }
+  .status-cards { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Market data strip (inside token panel) ─────────────────── */
+.market-strip { display: flex; flex-direction: column; }
+
+.mstrip-divider {
+  height: 1px;
+  background: var(--border2);
+  margin: 10px 0 8px;
+}
+
+.mstat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.mstat-l {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+}
+
+.mstat-v {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mstat-change {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.mstat-change.pos { color: var(--green); background: rgba(34,197,94,0.1); }
+.mstat-change.neg { color: var(--red);   background: rgba(239,68,68,0.1); }
+
+.pos { color: var(--green); }
+.neg { color: var(--red); }

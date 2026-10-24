@@ -1,0 +1,53 @@
+/* ============================================================
+   flags.css — Risk flags section
+   ============================================================ */
+.flags-summary {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border2);
+}
+.flags-summary-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 6px;
+  font-size: 0.68rem; font-weight: 600;
+  border: 1px solid;
+}
+.flags-summary-pill.critical { background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.3);  color: #fca5a5; }
+.flags-summary-pill.warning  { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: #fcd34d; }
+.flags-summary-pill.caution  { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); color: #93c5fd; }
+.summary-count { font-size: 1rem; font-weight: 800; }
+
+.flags-list {
+  display: flex; flex-direction: column; gap: 0;
+  padding: 8px 14px;
+}
+
+.flag-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 11px 4px;
+  border-bottom: 1px solid var(--border2);
+  font-size: 0.8rem; line-height: 1.5;
+  animation: fade-in 0.25s var(--ease) both;
+}
+.flag-row:last-child { border-bottom: none; }
+
+.flag-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+.flag-text { flex: 1; color: var(--text); }
+
+.flag-level-badge {
+  flex-shrink: 0; font-family: var(--font-mono);
+  font-size: 0.55rem; letter-spacing: 0.1em;
+  padding: 2px 8px; border-radius: 4px;
+  align-self: flex-start; margin-top: 2px;
+}
+.flag-row.critical .flag-level-badge { background: rgba(239,68,68,0.15);  color: var(--red); }
+.flag-row.warning  .flag-level-badge { background: rgba(245,158,11,0.15); color: var(--amber); }
+.flag-row.caution  .flag-level-badge { background: rgba(59,130,246,0.12); color: var(--blue); }
+
+.flag-row.critical .flag-text { color: #fca5a5; }
+.flag-row.warning  .flag-text { color: #fcd34d; }
+
+.flag-row.all-clear {
+  justify-content: center; color: var(--green);
+  font-weight: 500;
+}

@@ -1,0 +1,228 @@
+/* ============================================================
+   results.css — Risk score & token info section
+   ============================================================ */
+
+#results { background: var(--ink2); }
+
+/* ── Risk banner ────────────────────────────────────────── */
+.risk-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 28px 32px;
+  border-radius: 6px;
+  border: 1px solid;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  max-width: var(--section-max);
+  animation: banner-in 0.4s var(--ease);
+}
+
+@keyframes banner-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.risk-banner::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, var(--banner-glow) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.risk-banner.critical { border-color: var(--red);    --banner-glow: rgba(255,32,64,.25); }
+.risk-banner.high     { border-color: var(--orange);  --banner-glow: rgba(255,104,32,.2); }
+.risk-banner.medium   { border-color: var(--amber);   --banner-glow: rgba(255,183,0,.2); }
+.risk-banner.low      { border-color: var(--cyan2);   --banner-glow: rgba(0,212,255,.15); }
+.risk-banner.safe     { border-color: var(--green2);  --banner-glow: rgba(0,232,122,.15); }
+
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+  animation: banner-icon-pulse 2.5s ease-in-out infinite;
+}
+
+.risk-banner.critical .banner-icon { color: var(--red);    text-shadow: var(--glow-red); }
+.risk-banner.high     .banner-icon { color: var(--orange);  }
+.risk-banner.medium   .banner-icon { color: var(--amber);  text-shadow: var(--glow-amber); }
+.risk-banner.low      .banner-icon { color: var(--cyan);   text-shadow: var(--glow-cyan); }
+.risk-banner.safe     .banner-icon { color: var(--green);  text-shadow: var(--glow-green); }
+
+@keyframes banner-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+.banner-label {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.risk-banner.critical .banner-label { color: var(--red); }
+.risk-banner.high     .banner-label { color: var(--orange); }
+.risk-banner.medium   .banner-label { color: var(--amber); }
+.risk-banner.low      .banner-label { color: var(--cyan); }
+.risk-banner.safe     .banner-label { color: var(--green); }
+
+.banner-reason {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+}
+
+/* ── Score ring ─────────────────────────────────────────── */
+.score-ring-wrap {
+  position: relative;
+  width: 100px; height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.score-svg {
+  position: absolute; inset: 0;
+  transform: rotate(-90deg);
+}
+
+.score-track {
+  fill: none;
+  stroke: rgba(255,255,255,.05);
+  stroke-width: 7;
+}
+
+.score-fill {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 301;
+  stroke-dashoffset: 301;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1), stroke 0.3s;
+}
+
+.score-number {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+}
+
+.score-label {
+  position: absolute;
+  bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+/* ── Token cards ────────────────────────────────────────── */
+.token-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  max-width: var(--section-max);
+  margin-bottom: 24px;
+}
+
+.token-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 16px;
+  transition: border-color var(--t-fast);
+  animation: card-in 0.35s var(--ease) both;
+}
+
+.token-card:hover { border-color: var(--border); }
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.token-card.spotlight {
+  border-top: 2px solid var(--cyan3);
+  background: var(--surface2);
+}
+
+.tc-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.tc-symbol {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+.tc-name {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.tc-val {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── External links ─────────────────────────────────────── */
+.ext-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: var(--section-max);
+}
+
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--cyan2);
+  text-decoration: none;
+  transition: all var(--t-fast);
+}
+
+.ext-link:hover {
+  border-color: var(--cyan3);
+  color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0,212,255,.12);
+  text-decoration: none;
+}

@@ -1,0 +1,67 @@
+/* ============================================================
+   feedback.css — Feedback section
+   ============================================================ */
+.feedback-inner { padding: 18px; }
+.feedback-intro { font-size: 0.82rem; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
+
+.star-rating { display: flex; gap: 6px; margin-bottom: 6px; }
+.star {
+  background: none; border: none;
+  font-size: 1.7rem; color: var(--border);
+  cursor: pointer;
+  transition: color var(--t), transform var(--t);
+  padding: 0;
+}
+.star:hover, .star.lit {
+  color: var(--amber);
+  text-shadow: 0 0 10px rgba(245,158,11,0.4);
+  transform: scale(1.1);
+}
+
+.star-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 0.58rem;
+  color: var(--text3); max-width: 168px; margin-top: 4px;
+}
+
+.fb-textarea {
+  width: 100%; background: var(--bg-input);
+  border: 1px solid var(--border); border-radius: var(--input-r);
+  padding: 12px; font-size: 0.8rem; line-height: 1.6;
+  color: var(--text); resize: vertical; outline: none;
+  transition: border-color var(--t);
+}
+.fb-textarea:focus { border-color: var(--teal3); }
+.fb-textarea::placeholder { color: var(--text3); }
+
+.char-count {
+  text-align: right; font-family: var(--font-mono);
+  font-size: 0.58rem; color: var(--text3); margin-top: 5px;
+}
+.optional { font-size: 0.55rem; color: var(--text3); }
+
+.submit-btn {
+  width: 100%; height: 46px;
+  background: linear-gradient(135deg, #007a85, #00c4cc);
+  border: none; border-radius: var(--input-r);
+  font-family: var(--font); font-size: 0.82rem;
+  font-weight: 700; letter-spacing: 0.14em; color: #fff;
+  cursor: pointer; transition: opacity var(--t), box-shadow var(--t);
+  margin-top: 4px;
+}
+.submit-btn:hover:not(:disabled) { opacity: 0.9; box-shadow: var(--glow-teal); }
+.submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.feedback-success {
+  margin-top: 12px; padding: 11px 14px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25); border-radius: 8px;
+  font-size: 0.78rem; color: var(--green);
+  display: flex; gap: 8px; align-items: center;
+}
+.feedback-error {
+  margin-top: 12px; padding: 11px 14px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;
+  font-size: 0.78rem; color: #fca5a5;
+}
